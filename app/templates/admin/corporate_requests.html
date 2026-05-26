@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Заявки корпоративным клиентам — Админка{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="section-heading mb-4">Заявки корпоративным клиентам</h1>
+    <div class="card border-0 shadow-soft rounded-theme overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-theme align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Имя / Организация</th>
+                        <th>Контакты</th>
+                        <th>Сообщение</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                    <tr>
+                        <td>{{ req.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                        <td>{{ req.name }}</td>
+                        <td><small>{{ req.phone or '—' }}<br>{{ req.email or '—' }}</small></td>
+                        <td><small class="text-muted">{{ (req.message or '—')[:100] }}{% if (req.message or '')|length > 100 %}...{% endif %}</small></td>
+                        <td>
+                            <form method="post" action="{{ url_for('admin.corporate_request_status', req_id=req.id) }}" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <select name="status" class="form-select form-select-sm" style="min-width: 8rem;" onchange="this.form.submit()">
+                                    <option value="NEW" {% if req.status == 'NEW' %}selected{% endif %}>NEW</option>
+                                    <option value="IN_PROGRESS" {% if req.status == 'IN_PROGRESS' %}selected{% endif %}>IN_PROGRESS</option>
+                                    <option value="DONE" {% if req.status == 'DONE' %}selected{% endif %}>DONE</option>
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Заявок нет.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

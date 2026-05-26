@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Редактирование товара' if product else 'Новый товар' }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="section-heading mb-4">{{ 'Редактирование товара' if product else 'Новый товар' }}</h1>
+    <div class="card border-0 shadow-soft rounded-theme">
+        <div class="card-body p-4 p-lg-5">
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">SKU *</label>
+                        <input type="text" name="sku" class="form-control" value="{{ product.sku if product else '' }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Внешний ID (1С)</label>
+                        <input type="text" name="external_id" class="form-control" value="{{ product.external_id if product else '' }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Название *</label>
+                        <input type="text" name="name" class="form-control" value="{{ product.name if product else '' }}" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Краткое описание (только в каталоге, карточка списка)</label>
+                        <textarea name="summary" class="form-control" rows="2" placeholder="1–2 предложения для списка товаров. Если пусто — в каталоге покажем начало полного текста.">{{ product.summary if product else '' }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Полное описание (только на странице товара)</label>
+                        <textarea name="description" class="form-control" rows="6">{{ product.description if product else '' }}</textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Цена *</label>
+                        <input type="number" name="price" step="0.01" class="form-control" value="{{ product.price if product else '' }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Остаток</label>
+                        <input type="number" name="stock_qty" class="form-control" value="{{ product.stock_qty if product else 0 }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Категория</label>
+                        <select name="category_id" class="form-select">
+                            <option value="">—</option>
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if product and product.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">URL изображения <span class="text-muted fw-normal">(если не загружаете файл)</span></label>
+                        <input type="text" name="image_filename" class="form-control" value="{{ product.image_filename if product else '' }}" placeholder="https://… или путь">
+                    </div>
+                    {% if not product %}
+                    <div class="col-12">
+                        <label class="form-label">Загрузить изображения с компьютера</label>
+                        <input type="file" name="images" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple>
+                        <div class="form-text">Форматы: JPG, PNG, WebP. Несколько файлов — удерживайте Ctrl/Shift. До 5&nbsp;MB на запрос (см. настройки сервера). После сохранения откроется карточка товара — там же можно добавить ещё фото и выбрать главное.</div>
+                    </div>
+                    {% endif %}
+                    <div class="col-md-6 d-flex align-items-end">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_active" value="1" {% if not product or product.is_active %}checked{% endif %}>
+                            <label class="form-check-label">Активен (показывать в каталоге)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="{{ url_for('admin.products') }}" class="btn btn-outline-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if product %}
+    <div class="card border-0 shadow-soft rounded-theme mt-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Фото товара</h5>
+            <form method="post" action="{{ url_for('admin.product_images_upload', product_id=product.id) }}" enctype="multipart/form-data" class="mb-4">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-2">
+                    <label class="form-label">Загрузить изображения (jpg, png, webp, до 5 MB)</label>
+                    <input type="file" name="images" class="form-control" accept=".jpg,.jpeg,.png,.webp" multiple>
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Загрузить</button>
+            </form>
+            {% if product.images %}
+            <div class="row g-3">
+                {% for img in product.images %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card border rounded-theme-sm overflow-hidden">
+                        <img src="{{ url_for('static', filename=img.filename) }}" alt="{{ img.alt_text or product.name }}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                        <div class="card-body p-2 small">
+                            <div class="d-flex flex-wrap gap-1 mb-1">
+                                {% if not img.is_main %}
+                                <form method="post" action="{{ url_for('admin.product_image_set_main', product_id=product.id, image_id=img.id) }}" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">Главное</button>
+                                </form>
+                                {% else %}
+                                <span class="badge bg-primary">Главное</span>
+                                {% endif %}
+                                <form method="post" action="{{ url_for('admin.product_image_delete', product_id=product.id, image_id=img.id) }}" class="d-inline" onsubmit="return confirm('Удалить фото?');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                                </form>
+                            </div>
+                            <label class="d-flex align-items-center gap-1">
+                                <span>Порядок:</span>
+                                <input type="number" name="sort_{{ img.id }}" value="{{ img.sort_order }}" class="form-control form-control-sm" style="width: 4rem;" min="0" form="admin-reorder-product-images">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <form id="admin-reorder-product-images" method="post" action="{{ url_for('admin.product_images_reorder', product_id=product.id) }}" class="mt-2">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Сохранить порядок</button>
+            </form>
+            {% else %}
+            <p class="text-muted small mb-0">Нет загруженных фото. Используйте форму выше или URL изображения в основном блоке.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

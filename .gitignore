@@ -1,0 +1,31 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+instance/
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+!.env.example
+
+# редактор / IDE
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+
+# отчёты по практике (хранятся вне репозитория)
+*.docx
+*.zip
+_docx_*/
+final_probe/
+report_extracted*.txt
+*.log
+
+# логотип в корне (используется только для отчёта)
+bereginya_altaya_logo.png

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Админка — Берегиня Алтая{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="section-heading mb-1">Административная панель</h1>
+    <p class="section-subheading mb-4">Управление каталогом, заказами и заявками.</p>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-soft rounded-theme h-100">
+                <div class="card-body p-4">
+                    <h6 class="text-muted text-uppercase small fw-semibold mb-2">Товары</h6>
+                    <div class="h3 fw-bold text-primary mb-3">{{ product_count }}</div>
+                    <a href="{{ url_for('admin.products') }}" class="btn btn-outline-primary btn-sm">Управлять</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-soft rounded-theme h-100">
+                <div class="card-body p-4">
+                    <h6 class="text-muted text-uppercase small fw-semibold mb-2">Категории</h6>
+                    <div class="h3 fw-bold text-primary mb-3">{{ category_count }}</div>
+                    <a href="{{ url_for('admin.categories') }}" class="btn btn-outline-primary btn-sm">Управлять</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-soft rounded-theme h-100">
+                <div class="card-body p-4">
+                    <h6 class="text-muted text-uppercase small fw-semibold mb-2">Заказы</h6>
+                    <div class="h3 fw-bold text-primary mb-3">{{ order_count }}</div>
+                    <a href="{{ url_for('admin.orders') }}" class="btn btn-outline-primary btn-sm">Управлять</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{{ url_for('admin.corporate_requests') }}" class="btn btn-outline-secondary">Заявки корпоративным клиентам</a>
+        <a href="{{ url_for('admin.import_csv') }}" class="btn btn-outline-secondary">Импорт CSV</a>
+    </div>
+</div>
+{% endblock %}

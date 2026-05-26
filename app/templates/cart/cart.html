@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Корзина — Берегиня Алтая{% endblock %}
+
+{% block content %}
+<div class="container py-4" id="js-cart-page" data-cart-api-line="{{ url_for('cart.api_set_line') }}">
+
+    <div class="mb-4">
+        <span class="section-label">Покупки</span>
+        <h1 class="section-heading mb-1">Корзина</h1>
+        <p class="text-muted" style="font-size: var(--text-sm);">
+            Проверьте состав и перейдите к оформлению заказа.
+        </p>
+    </div>
+
+    {% if items %}
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-soft rounded-theme overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-theme align-middle mb-0" aria-label="Состав корзины">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 260px;">Товар</th>
+                                <th>Цена</th>
+                                <th class="text-center">Кол-во</th>
+                                <th>Итого</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="js-cart-tbody">
+                            {% for item in items %}
+                            {% set st = item.product.stock_qty or 0 %}{% set max_q = 999 if st > 999 else st %}
+                            <tr data-js-cart-row
+                                data-product-id="{{ item.product.id }}"
+                                data-max-qty="{{ max_q }}"
+                                data-unit-price="{{ item.product.price }}">
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        {% set img_src = item.product.main_image_path_or_url %}
+                                        <img src="{% if img_src %}{% if img_src.startswith('http') %}{{ img_src }}{% else %}{{ url_for('static', filename=img_src) }}{% endif %}{% else %}{{ url_for('static', filename='img/placeholder-product.svg') }}{% endif %}"
+                                            class="cart-item-img"
+                                            alt="{{ item.product.name }}">
+                                        <div>
+                                            <a href="{{ url_for('main.product_detail', product_id=item.product.id) }}"
+                                                class="fw-semibold text-decoration-none text-dark"
+                                                style="font-size: var(--text-sm);">
+                                                {{ item.product.name }}
+                                            </a>
+                                            {% if item.product.category %}
+                                            <div class="text-muted" style="font-size: 0.73rem;">
+                                                {{ item.product.category.name }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-muted js-cart-unit" style="font-size: var(--text-sm); white-space: nowrap;">
+                                    {{ item.product.price }}&nbsp;₽
+                                </td>
+                                <td class="text-center">
+                                    <div class="qty-stepper d-inline-flex align-items-stretch" role="group" aria-label="Количество для «{{ item.product.name|e }}»">
+                                        <button type="button" class="btn qty-stepper__btn js-cart-qty-dec" aria-label="Уменьшить количество" {% if item.qty <= 1 %}disabled{% endif %}>−</button>
+                                        <span class="qty-stepper__value js-cart-qty-value" aria-live="polite">{{ item.qty }}</span>
+                                        <button type="button" class="btn qty-stepper__btn js-cart-qty-inc" aria-label="Увеличить количество" {% if item.qty >= max_q %}disabled{% endif %}>+</button>
+                                    </div>
+                                </td>
+                                <td class="fw-semibold js-line-total" style="white-space: nowrap;">{{ item.line_total }}&nbsp;₽</td>
+                                <td>
+                                    <button type="button" class="btn btn-ghost p-1 js-cart-remove" data-product-id="{{ item.product.id }}"
+                                        title="Удалить" aria-label="Удалить товар из корзины">
+                                        <i class="bi bi-trash3" style="color: var(--color-danger); font-size: 1rem;"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Продолжить покупки
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card summary-sticky border-0 shadow-soft rounded-theme p-4">
+                <h5 class="fw-semibold mb-3" style="font-family: var(--font-sans);">Итог заказа</h5>
+
+                <div class="d-flex justify-content-between align-items-center mb-2" style="font-size: var(--text-sm);">
+                    <span class="text-muted">Позиций</span>
+                    <span class="js-cart-line-count">{{ items|length }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2" style="font-size: var(--text-sm);">
+                    <span class="text-muted">Единиц товара</span>
+                    <span class="js-cart-pieces">{{ total_qty }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-3 mt-2 border-top mb-4">
+                    <span class="fw-bold">Итого</span>
+                    <span class="fw-bold js-cart-total" style="font-size: 1.4rem; font-family: var(--font-sans);">
+                        {{ (total|round(0))|int }}&nbsp;₽
+                    </span>
+                </div>
+
+                <a href="{{ url_for('orders.checkout') }}"
+                    class="btn btn-primary w-100 btn-lg">Оформить заказ</a>
+
+                {% if not current_user.is_authenticated %}
+                <p class="text-muted small mt-3 mb-0" style="font-size: var(--text-sm);">
+                    Без регистрации — как гость, или
+                    <a href="{{ url_for('auth.login', next=url_for('orders.checkout')) }}">войдите</a> /
+                    <a href="{{ url_for('auth.register', next=url_for('orders.checkout')) }}">зарегистрируйтесь</a>
+                    — корзина сохранится при входе.
+                </p>
+                {% endif %}
+
+                <div class="mt-3 d-flex flex-column gap-1">
+                    <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 0.78rem;">
+                        <i class="bi bi-shield-check text-primary"></i>Безопасная оплата
+                    </div>
+                    <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 0.78rem;">
+                        <i class="bi bi-truck text-primary"></i>Доставка по России
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="card border-0 shadow-soft rounded-theme py-5 text-center empty-state-card">
+        <div class="card-body px-4 py-2">
+            <div class="feature-icon-wrap mx-auto mb-3" style="font-size: 1.75rem;">
+                <i class="bi bi-bag" aria-hidden="true"></i>
+            </div>
+            <h2 class="fw-semibold h5 mb-2" style="font-family: var(--font-heading);">Корзина пуста</h2>
+            <p class="text-muted small mb-4 lh-base">Добавьте товары из каталога — цены и остатки указаны на карточках.</p>
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary px-4">
+                <i class="bi bi-grid me-2" aria-hidden="true"></i>Перейти в каталог
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

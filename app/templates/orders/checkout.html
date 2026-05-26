@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+
+
+{% block title %}Оформление заказа — Берегиня Алтая{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container py-4">
+
+
+
+    <div class="mb-4">
+
+        <span class="section-label">Заказ</span>
+
+        <h1 class="section-heading mb-1">Оформление заказа</h1>
+
+        <p class="text-muted" style="font-size: var(--text-sm);">
+
+            Укажите контактные данные и способ доставки.
+
+        </p>
+
+        {% if checkout_is_guest %}
+
+        <div class="alert alert-info border-0 rounded-theme mb-0" style="font-size: var(--text-sm);">
+
+            <i class="bi bi-person-check me-2"></i>Оформление <strong>без регистрации</strong>. После заказа вы увидите номер заказа на этой странице;
+
+            при желании можно <a href="{{ url_for('auth.login', next=url_for('orders.checkout')) }}" class="alert-link">войти</a>
+
+            — корзина из сессии перенесётся в аккаунт.
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <div class="row g-5">
+
+
+
+        {# ── Form ── #}
+
+        <div class="col-lg-7">
+
+            <div class="card border-0 shadow-soft rounded-theme">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <form method="post" novalidate>
+
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+
+
+                        <h6 class="fw-semibold mb-3 pb-2 border-bottom"
+
+                            style="font-family: var(--font-sans); font-size: 0.85rem;
+
+                                   text-transform: uppercase; letter-spacing: 0.07em;
+
+                                   color: var(--color-text-muted);">
+
+                            Получатель
+
+                        </h6>
+
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label" for="contact_name">Контактное лицо *</label>
+
+                            <input type="text" name="contact_name" id="contact_name"
+
+                                class="form-control" required
+
+                                placeholder="Имя и фамилия">
+
+                        </div>
+
+
+
+                        <div class="mb-4">
+
+                            <label class="form-label" for="phone">Телефон *</label>
+
+                            <input type="tel" name="phone" id="phone"
+
+                                class="form-control" required
+
+                                placeholder="+7 (___) ___-__-__">
+
+                        </div>
+
+                        {% if checkout_is_guest %}
+
+                        <div class="mb-4">
+
+                            <label class="form-label" for="guest_email">Email <span class="text-muted fw-normal">(необязательно)</span></label>
+
+                            <input type="email" name="guest_email" id="guest_email"
+
+                                class="form-control" autocomplete="email"
+
+                                placeholder="для отправки копии заказа">
+
+                        </div>
+
+                        {% endif %}
+
+                        <h6 class="fw-semibold mb-3 pb-2 border-bottom"
+
+                            style="font-family: var(--font-sans); font-size: 0.85rem;
+
+                                   text-transform: uppercase; letter-spacing: 0.07em;
+
+                                   color: var(--color-text-muted);">
+
+                            Доставка
+
+                        </h6>
+
+
+
+                        <div class="mb-3">
+
+                            <label class="form-label" for="address">Адрес доставки</label>
+
+                            <input type="text" name="address" id="address"
+
+                                class="form-control"
+
+                                placeholder="Город, улица, дом, квартира">
+
+                        </div>
+
+
+
+                        <div class="mb-4">
+
+                            <label class="form-label" for="delivery_method">Способ доставки</label>
+
+                            <input type="text" name="delivery_method" id="delivery_method"
+
+                                class="form-control"
+
+                                placeholder="Курьер, СДЭК, Почта России…">
+
+                        </div>
+
+
+
+                        <h6 class="fw-semibold mb-3 pb-2 border-bottom"
+
+                            style="font-family: var(--font-sans); font-size: 0.85rem;
+
+                                   text-transform: uppercase; letter-spacing: 0.07em;
+
+                                   color: var(--color-text-muted);">
+
+                            Оплата
+
+                        </h6>
+
+
+
+                        <div class="d-flex flex-column gap-2 mb-4">
+
+                            <label class="d-flex align-items-center gap-3 p-3 rounded-theme cursor-pointer"
+
+                                style="border: 1.5px solid var(--color-border); cursor: pointer;
+
+                                       transition: border-color var(--transition-fast);"
+
+                                onmouseover="this.style.borderColor='var(--color-primary)'"
+
+                                onmouseout="this.style.borderColor='var(--color-border)'">
+
+                                <input class="form-check-input mt-0 flex-shrink-0"
+
+                                    type="radio" name="pay_online" value="0" id="pay0" checked>
+
+                                <div>
+
+                                    <span class="fw-semibold d-block" style="font-size: var(--text-sm);">
+
+                                        При получении
+
+                                    </span>
+
+                                    <span class="text-muted" style="font-size: 0.78rem;">
+
+                                        Наличными или картой курьеру
+
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+                            <label class="d-flex align-items-center gap-3 p-3 rounded-theme cursor-pointer"
+
+                                style="border: 1.5px solid var(--color-border); cursor: pointer;
+
+                                       transition: border-color var(--transition-fast);"
+
+                                onmouseover="this.style.borderColor='var(--color-primary)'"
+
+                                onmouseout="this.style.borderColor='var(--color-border)'">
+
+                                <input class="form-check-input mt-0 flex-shrink-0"
+
+                                    type="radio" name="pay_online" value="1" id="pay1">
+
+                                <div>
+
+                                    <span class="fw-semibold d-block" style="font-size: var(--text-sm);">
+
+                                        Онлайн
+
+                                    </span>
+
+                                    <span class="text-muted" style="font-size: 0.78rem;">
+
+                                        Тестовая заглушка оплаты
+
+                                    </span>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <div class="mb-4">
+
+                            <label class="form-label" for="comment">Комментарий к заказу</label>
+
+                            <textarea name="comment" id="comment"
+
+                                class="form-control" rows="3"
+
+                                placeholder="Любые пожелания или уточнения…"></textarea>
+
+                        </div>
+
+
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+
+                            <i class="bi bi-check2-circle me-2"></i>Подтвердить заказ
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        {# ── Order summary ── #}
+
+        <div class="col-lg-5">
+
+            <div class="card summary-sticky border-0 shadow-soft rounded-theme p-4">
+
+                <h5 class="fw-semibold mb-3" style="font-family: var(--font-sans);">
+
+                    Ваш заказ
+
+                </h5>
+
+
+
+                <div class="d-flex flex-column gap-1 mb-3">
+
+                    {% for item in items %}
+
+                    <div class="d-flex justify-content-between align-items-start py-2 border-bottom"
+
+                        style="font-size: var(--text-sm);">
+
+                        <span class="text-muted" style="max-width: 65%;">
+
+                            {{ item.product.name }}
+
+                            <span class="d-block" style="font-size: 0.75rem;">× {{ item.qty }}</span>
+
+                        </span>
+
+                        <span class="fw-semibold flex-shrink-0">{{ item.line_total }} ₽</span>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+
+                <div class="d-flex justify-content-between align-items-center mt-2">
+
+                    <span class="fw-bold">Итого</span>
+
+                    <span class="fw-bold" style="font-size: 1.35rem; font-family: var(--font-sans);">
+
+                        {{ total }} ₽
+
+                    </span>
+
+                </div>
+
+
+
+                <div class="mt-4 d-flex flex-column gap-2">
+
+                    <div class="d-flex align-items-center gap-2 text-muted"
+
+                        style="font-size: 0.78rem;">
+
+                        <i class="bi bi-lock text-primary"></i>
+
+                        Данные передаются защищённо
+
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 text-muted"
+
+                        style="font-size: 0.78rem;">
+
+                        <i class="bi bi-headset text-primary"></i>
+
+                        Поддержка 09:00–21:00
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+</div>
+
+{% endblock %}
+

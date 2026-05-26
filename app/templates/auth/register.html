@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+
+
+{% block title %}Регистрация — Берегиня Алтая{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="auth-wrap" style="max-width: 520px;">
+
+
+
+        <div class="auth-logo-badge">
+
+            <img src="{{ url_for('static', filename='img/logo.png') }}" width="32" height="32" alt="" class="auth-logo-badge__img">
+
+        </div>
+
+
+
+        <h2 class="mb-1" style="font-family: var(--font-heading);">Создать аккаунт</h2>
+
+        <p class="text-muted mb-4" style="font-size: var(--text-sm);">
+
+            Зарегистрируйтесь, чтобы оформлять заказы и следить за доставкой.
+
+        </p>
+
+
+
+        <div class="card border-0 shadow-soft rounded-theme">
+
+            <div class="card-body p-4 p-lg-5">
+
+                <form method="post" novalidate>
+
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {% if request.args.get('next') %}
+                    <input type="hidden" name="next" value="{{ request.args.get('next') }}">
+                    {% endif %}
+
+
+
+                    <div class="row g-3 mb-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label" for="first_name">Имя</label>
+
+                            <input type="text" name="first_name" id="first_name"
+
+                                class="form-control" autocomplete="given-name" required
+
+                                placeholder="Алёна">
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label" for="last_name">Фамилия</label>
+
+                            <input type="text" name="last_name" id="last_name"
+
+                                class="form-control" autocomplete="family-name" required
+
+                                placeholder="Иванова">
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label" for="email">Email</label>
+
+                        <input type="email" name="email" id="email"
+
+                            class="form-control" autocomplete="email" required
+
+                            placeholder="your@email.ru">
+
+                    </div>
+
+
+
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label" for="password">Пароль</label>
+
+                            <input type="password" name="password" id="password"
+
+                                class="form-control" autocomplete="new-password" required
+
+                                placeholder="Минимум 8 символов">
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label" for="confirm">Повторите пароль</label>
+
+                            <input type="password" name="confirm" id="confirm"
+
+                                class="form-control" autocomplete="new-password" required
+
+                                placeholder="••••••••">
+
+                        </div>
+
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+
+                        Создать аккаунт
+
+                    </button>
+
+                </form>
+
+
+
+                <p class="text-muted mt-4 mb-0 text-center" style="font-size: var(--text-sm);">
+
+                    Уже есть аккаунт?
+
+                    <a href="{% if request.args.get('next') %}{{ url_for('auth.login', next=request.args.get('next')) }}{% else %}{{ url_for('auth.login') }}{% endif %}" class="fw-semibold text-primary">Войти</a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Заказ №{{ order.id }} — Админка{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav class="mb-3" style="font-size: var(--text-sm);">
+        <a href="{{ url_for('admin.orders') }}" class="text-muted text-decoration-none">← К списку заказов</a>
+    </nav>
+    <h1 class="section-heading mb-1">Заказ №{{ order.id }}</h1>
+    <p class="text-muted small mb-4">Создан: {{ order.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-soft rounded-theme mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h6 fw-bold mb-3" style="font-family: var(--font-sans);">Состав</h2>
+                    <div class="table-responsive">
+                        <table class="table table-theme align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th class="text-end">Цена</th>
+                                    <th class="text-center">Кол-во</th>
+                                    <th class="text-end">Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items.all() %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('admin.product_edit', product_id=item.product_id) }}" class="text-decoration-none">
+                                            {{ item.product.name }}
+                                        </a>
+                                    </td>
+                                    <td class="text-end">{{ item.price_snapshot }}&nbsp;₽</td>
+                                    <td class="text-center">{{ item.qty }}</td>
+                                    <td class="text-end">{{ (item.price_snapshot * item.qty) }}&nbsp;₽</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-soft rounded-theme mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h6 fw-bold mb-3" style="font-family: var(--font-sans);">Сумма и статус</h2>
+                    <p class="h4 text-primary mb-3">{{ order.total_amount }}&nbsp;₽</p>
+                    <form method="post" action="{{ url_for('admin.order_status', order_id=order.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <label class="form-label small">Статус</label>
+                        <select name="status" class="form-select form-select-sm mb-2" onchange="this.form.submit()">
+                            {% for code in admin_order_statuses %}
+                            <option value="{{ code }}" {% if order.status == code %}selected{% endif %}>{{ order_status_label(code) }}</option>
+                            {% endfor %}
+                            {% if order.status not in admin_order_statuses %}
+                            <option value="{{ order.status }}" selected>{{ order_status_label(order.status) }}</option>
+                            {% endif %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class="card border-0 shadow-soft rounded-theme">
+                <div class="card-body p-4">
+                    <h2 class="h6 fw-bold mb-3" style="font-family: var(--font-sans);">Клиент</h2>
+                    <p class="mb-1"><strong>{{ order.contact_name }}</strong></p>
+                    <p class="mb-1"><a href="tel:{{ order.phone }}">{{ order.phone }}</a></p>
+                    {% if order.guest_email %}
+                    <p class="mb-1 small text-muted">Email: {{ order.guest_email }}</p>
+                    {% endif %}
+                    {% if order.user_id %}
+                    <p class="mb-0 small">Покупатель: id {{ order.user_id }}{% if order.user %}, {{ order.user.email }}{% endif %}</p>
+                    {% else %}
+                    <p class="mb-0"><span class="badge text-bg-secondary">Гостевой заказ</span></p>
+                    {% endif %}
+                    {% if order.address %}
+                    <p class="mt-2 mb-0 small">Адрес: {{ order.address }}</p>
+                    {% endif %}
+                    {% if order.delivery_method %}
+                    <p class="mb-0 small">Доставка: {{ order.delivery_method }}</p>
+                    {% endif %}
+                    {% if order.comment %}
+                    <p class="mt-2 mb-0 small text-muted">Комментарий: {{ order.comment }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if order.payments.count() %}
+            <div class="card border-0 shadow-soft rounded-theme mt-4">
+                <div class="card-body p-4">
+                    <h2 class="h6 fw-bold mb-3" style="font-family: var(--font-sans);">Платежи</h2>
+                    <ul class="list-unstyled small mb-0">
+                        {% for p in order.payments.all() %}
+                        <li class="mb-2">
+                            <span class="text-muted">{{ p.provider }}</span> — {{ p.status }} — {{ p.amount }}&nbsp;₽
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

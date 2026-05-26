@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+
+
+{% block title %}Корпоративные заказы — Берегиня Алтая{% endblock %}
+
+
+
+{% block content %}
+
+<div class="page-hero">
+
+    <div class="container">
+
+        <p class="page-hero-eyebrow">Берегиня Алтая</p>
+
+        <h1>Корпоративные заказы</h1>
+
+        <p>Подарочные наборы и продукция для компаний — с заботой об имидже и сроках.</p>
+
+    </div>
+
+</div>
+
+
+
+<div class="container mb-5 corporate-page">
+
+    <section class="corporate-section mb-4 mb-lg-5" aria-labelledby="corp-desc-heading">
+
+        <h2 id="corp-desc-heading" class="visually-hidden">Что мы создаём</h2>
+
+        <p class="text-muted mb-0 corporate-intro">
+
+            Мы создаём <strong>корпоративные подарки и наборы</strong> под ваш бренд: от небольших баночек мёда с тегами и лентами до крупных партий для конференций, новогодних кампаний и благодарностей партнёрам. Подберём состав, упаковку и сроки, согласуем объёмы и документы — от заявки до отгрузки.
+
+        </p>
+
+    </section>
+
+
+
+    <section class="corporate-gallery row g-3 g-md-4 mb-4 mb-lg-5" aria-label="Примеры работ">
+
+        <div class="col-md-4">
+
+            <div class="corporate-gallery-item rounded-theme overflow-hidden shadow-soft">
+
+                <img src="{{ url_for('static', filename='img/corporate/photo_1.png') }}" class="w-100" width="900" height="600" alt="Пример корпоративной продукции" loading="lazy">
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="corporate-gallery-item rounded-theme overflow-hidden shadow-soft">
+
+                <img src="{{ url_for('static', filename='img/corporate/photo_2.png') }}" class="w-100" width="900" height="600" alt="Пример упаковки и наборов" loading="lazy">
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="corporate-gallery-item rounded-theme overflow-hidden shadow-soft">
+
+                <img src="{{ url_for('static', filename='img/corporate/photo_3.png') }}" class="w-100" width="900" height="600" alt="Пример крупной партии" loading="lazy">
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <div class="row g-5 align-items-start">
+
+        <div class="col-lg-7">
+
+            <h2 class="h5 fw-bold mb-4">Форма заявки</h2>
+
+            <div class="card border-0 shadow-soft rounded-theme">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <form method="post">
+
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Имя или название организации *</label>
+
+                            <input type="text" name="name" class="form-control" required>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Телефон</label>
+
+                            <input type="text" name="phone" class="form-control">
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">Email</label>
+
+                            <input type="email" name="email" class="form-control">
+
+                        </div>
+
+                        <div class="mb-4">
+
+                            <label class="form-label">Сообщение</label>
+
+                            <textarea name="message" class="form-control" rows="4"></textarea>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Отправить заявку</button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-5">
+
+            <h3 class="h5 fw-bold mb-3">Как мы работаем</h3>
+
+            <div class="d-flex gap-3 mb-4">
+
+                <span class="rounded-circle bg-soft-primary text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem;">1</span>
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">Заявка</h6>
+
+                    <p class="text-muted small mb-0">Оставьте контакты и пожелания — мы перезвоним в течение дня.</p>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-3 mb-4">
+
+                <span class="rounded-circle bg-soft-primary text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem;">2</span>
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">Обсуждение</h6>
+
+                    <p class="text-muted small mb-0">Согласуем ассортимент, объём и условия доставки.</p>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-3">
+
+                <span class="rounded-circle bg-soft-primary text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem; min-width: 2.5rem;">3</span>
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">Поставка</h6>
+
+                    <p class="text-muted small mb-0">Отгружаем заказ в удобные сроки с документами.</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — Берегиня Алтая{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb" style="font-size: var(--text-sm); background: none; padding: 0; margin: 0;">
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.index') }}" class="text-muted text-decoration-none">Каталог</a>
+            </li>
+            {% if product.category %}
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.index', category=product.category.id) }}"
+                    class="text-muted text-decoration-none">{{ product.category.name }}</a>
+            </li>
+            {% endif %}
+            <li class="breadcrumb-item active text-truncate" style="max-width: 240px;">
+                {{ product.name }}
+            </li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div class="product-gallery shadow-soft">
+                {% if product.images %}
+                {% set slides = product.display_images %}
+                <div id="productCarousel" class="carousel slide" data-bs-ride="false">
+                    <div class="carousel-inner">
+                        {% for img in slides %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img src="{{ url_for('static', filename=img.filename) }}"
+                                class="d-block w-100 product-gallery-img"
+                                alt="{{ img.alt_text or product.name }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if slides | length > 1 %}
+                    <button class="carousel-control-prev" type="button"
+                        data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Назад</span>
+                    </button>
+                    <button class="carousel-control-next" type="button"
+                        data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Вперёд</span>
+                    </button>
+                    <div class="product-thumb-strip">
+                        {% for img in slides %}
+                        <img src="{{ url_for('static', filename=img.filename) }}"
+                            alt="{{ img.alt_text or product.name }}"
+                            class="{% if loop.first %}active{% endif %}"
+                            onclick="bootstrap.Carousel.getOrCreateInstance(document.getElementById('productCarousel')).to({{ loop.index0 }})">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                {% set img_src = product.main_image_path_or_url %}
+                <img src="{% if img_src %}{% if img_src.startswith('http') %}{{ img_src }}{% else %}{{ url_for('static', filename=img_src) }}{% endif %}{% else %}{{ url_for('static', filename='img/placeholder-product.svg') }}{% endif %}"
+                    class="img-fluid w-100 product-gallery-img"
+                    alt="{{ product.name }}">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            {% if product.category %}
+            <span class="section-label mb-2">{{ product.category.name }}</span>
+            {% endif %}
+            <h1 class="h2 fw-bold mb-3" style="font-family: var(--font-heading);">
+                {{ product.name }}
+            </h1>
+
+            <div class="border-top pt-3 mb-4">
+                <h6 class="fw-semibold mb-2" style="font-family: var(--font-sans);">Описание</h6>
+                <p class="text-muted mb-0" style="font-size: var(--text-base); line-height: 1.75;">
+                    {{ product.description or 'Описание товара скоро появится.' }}
+                </p>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 flex-wrap mb-4 p-3 rounded-theme" style="background: var(--color-bg-warm);">
+                <span class="display-6 fw-bold" style="font-family: var(--font-sans); color: var(--color-text); line-height: 1;">
+                    {{ product.price }} ₽
+                </span>
+                <span class="stock-badge" style="font-size: 0.78rem; padding: 0.3em 0.85em;">
+                    <i class="bi bi-check2-circle me-1"></i>В наличии: {{ product.stock_qty }} шт.
+                </span>
+            </div>
+
+            {% set pstock = product.stock_qty or 0 %}
+            {% set smax = 999 if pstock > 999 else pstock %}
+            <form method="post"
+                action="{{ url_for('cart.add', product_id=product.id) }}"
+                class="js-add-to-cart-form product-detail-cart d-flex flex-wrap gap-2 align-items-stretch align-items-sm-center mb-5"
+                data-product-id="{{ product.id }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="small text-muted mb-0" id="label-qty-{{ product.id }}" style="white-space: nowrap;">Количество:</span>
+                    <div class="qty-stepper qty-stepper--product js-qty-stepper" data-min="1" data-max="{{ smax }}">
+                        <button type="button" class="btn qty-stepper__btn js-qty-dec" aria-label="Уменьшить количество" {% if smax < 1 %}disabled{% endif %}>−</button>
+                        <span class="qty-stepper__value js-qty-value" aria-live="polite" aria-labelledby="label-qty-{{ product.id }}">1</span>
+                        <input type="hidden" name="quantity" class="js-qty-input" value="1">
+                        <button type="button" class="btn qty-stepper__btn js-qty-inc" aria-label="Увеличить количество" {% if smax < 1 %}disabled{% endif %}>+</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg product-detail-cart__submit" {% if smax < 1 %}disabled{% endif %}>
+                    <i class="bi bi-bag-plus me-2"></i>Добавить в корзину
+                </button>
+            </form>
+
+            <div class="d-flex flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-2 text-muted" style="font-size: var(--text-sm);">
+                    <i class="bi bi-truck text-primary"></i>
+                    Доставка по России
+                </div>
+                <div class="d-flex align-items-center gap-2 text-muted" style="font-size: var(--text-sm);">
+                    <i class="bi bi-patch-check text-primary"></i>
+                    Сертифицированное качество
+                </div>
+                <div class="d-flex align-items-center gap-2 text-muted" style="font-size: var(--text-sm);">
+                    <i class="bi bi-flower2 text-primary"></i>
+                    100% натуральное
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 pt-3 border-top">
+        <a href="{{ url_for('main.index') }}"
+            class="product-back-link d-inline-flex align-items-center gap-2 text-muted text-decoration-none"
+            style="font-size: var(--text-sm);">
+            <i class="bi bi-arrow-left"></i>
+            Вернуться в каталог
+        </a>
+    </div>
+</div>
+{% endblock %}

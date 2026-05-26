@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" role="img" aria-label="No product image">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e4df"/>
+      <stop offset="100%" style="stop-color:#d8f3dc"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#g)"/>
+  <g fill="#40916c" opacity="0.4">
+    <circle cx="200" cy="180" r="60"/>
+    <path d="M140 260h120v20H140z"/>
+  </g>
+  <text x="200" y="320" font-family="system-ui,sans-serif" font-size="14" fill="#6b7280" text-anchor="middle">No photo</text>
+</svg>

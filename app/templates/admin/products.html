@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Товары — Админка{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <h1 class="section-heading mb-0">Товары</h1>
+        <a href="{{ url_for('admin.product_new') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Новый товар</a>
+    </div>
+    <div class="card border-0 shadow-soft rounded-theme overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-theme align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Название</th>
+                        <th>Цена</th>
+                        <th>Остаток</th>
+                        <th>Категория</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in pagination.items %}
+                    <tr>
+                        <td>{{ product.sku }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.price }} ₽</td>
+                        <td>{{ product.stock_qty }}</td>
+                        <td>{{ product.category.name if product.category else '—' }}</td>
+                        <td class="text-end">
+                            <a href="{{ url_for('admin.product_edit', product_id=product.id) }}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                            <form method="post" action="{{ url_for('admin.product_delete', product_id=product.id) }}" class="d-inline-block">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Товаров пока нет.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if pagination.pages > 1 %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% for p in pagination.iter_pages() %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('admin.products', page=p) }}">{{ p or '…' }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

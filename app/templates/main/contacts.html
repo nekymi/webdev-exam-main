@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Контакты — Берегиня Алтая{% endblock %}
+
+{% block content %}
+
+<div class="page-hero">
+    <div class="container">
+        <p class="page-hero-eyebrow">Берегиня Алтая</p>
+        <h1>Контакты</h1>
+        <p>Адрес, телефоны и режим работы. Наличие позиций уточняйте по телефону.</p>
+    </div>
+</div>
+
+<div class="container page-content-section">
+
+    <div class="row g-4 g-lg-4 mb-4 mb-lg-5">
+
+        <div class="col-12 col-md-4">
+            <div class="feature-card feature-card--stat h-100">
+                <div class="feature-icon-wrap">
+                    <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                </div>
+                <h6>Адрес</h6>
+                <p class="text-muted mb-0">Санкт-Петербург, Спасский переулок 6–8</p>
+                <p class="text-muted small mb-0 mt-2">м. Садовая</p>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="feature-card feature-card--stat h-100">
+                <div class="feature-icon-wrap">
+                    <i class="bi bi-telephone" aria-hidden="true"></i>
+                </div>
+                <h6>Телефоны</h6>
+                <p class="mb-2">
+                    <a href="tel:+79916757391">+7 (991) 675-73-91</a>
+                </p>
+                <p class="mb-0">
+                    <a href="tel:+79916757390">+7 (991) 675-73-90</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="feature-card feature-card--stat h-100">
+                <div class="feature-icon-wrap">
+                    <i class="bi bi-clock" aria-hidden="true"></i>
+                </div>
+                <h6>Режим работы</h6>
+                <p class="text-muted small mb-1">пн — пт: 11:00 — 21:00</p>
+                <p class="text-muted small mb-0">сб — вс: 11:00 — 18:00</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-soft rounded-theme p-4 p-lg-5" style="background: var(--color-bg-warm);">
+        <div class="row g-4 align-items-start align-items-md-center">
+            <div class="col-md-6">
+                <span class="section-label">Связь</span>
+                <h2 class="h5 mb-3" style="font-family: var(--font-heading);">Электронная почта</h2>
+                <p class="text-muted mb-3 mb-md-4" style="font-size: var(--text-sm); max-width: 26rem; line-height: 1.7;">
+                    По вопросам заказа, ассортимента и корпоративных поставок напишите на почту — ответим в рабочее время.
+                </p>
+                <a href="mailto:altayber@mail.ru" class="btn btn-primary">Написать на altayber@mail.ru</a>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex align-items-start gap-3 p-3 p-md-4 rounded-theme bg-white shadow-soft h-100">
+                    <i class="bi bi-envelope text-primary fs-4 flex-shrink-0 mt-1" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold mb-1" style="font-size: var(--text-sm);">Email</div>
+                        <a href="mailto:altayber@mail.ru" class="text-break d-inline-block">altayber@mail.ru</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

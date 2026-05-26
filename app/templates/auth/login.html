@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+
+
+{% block title %}Вход — Берегиня Алтая{% endblock %}
+
+
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="auth-wrap">
+
+
+
+        <div class="auth-logo-badge">
+
+            <img src="{{ url_for('static', filename='img/logo.png') }}" width="32" height="32" alt="" class="auth-logo-badge__img">
+
+        </div>
+
+
+
+        <h2 class="mb-1" style="font-family: var(--font-heading);">С возвращением</h2>
+
+        <p class="text-muted mb-4" style="font-size: var(--text-sm);">
+
+            Войдите, чтобы просматривать заказы и управлять корзиной.
+
+        </p>
+
+
+
+        <div class="card border-0 shadow-soft rounded-theme">
+
+            <div class="card-body p-4 p-lg-5">
+
+                <form method="post" novalidate>
+
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {% if request.args.get('next') %}
+                    <input type="hidden" name="next" value="{{ request.args.get('next') }}">
+                    {% endif %}
+
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label" for="email">Email</label>
+
+                        <input type="email" name="email" id="email"
+
+                            class="form-control" autocomplete="email" required
+
+                            placeholder="your@email.ru">
+
+                    </div>
+
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label" for="password">Пароль</label>
+
+                        <input type="password" name="password" id="password"
+
+                            class="form-control" autocomplete="current-password" required
+
+                            placeholder="••••••••">
+
+                    </div>
+
+
+
+                    <div class="form-check mb-4">
+
+                        <input type="checkbox" class="form-check-input" name="remember" id="remember">
+
+                        <label class="form-check-label small" for="remember">Запомнить меня</label>
+
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+
+                        Войти
+
+                    </button>
+
+                </form>
+
+
+
+                <div class="divider-leaf my-4">
+
+                    <span class="text-muted" style="font-size: var(--text-xs); white-space: nowrap;">нет аккаунта?</span>
+
+                </div>
+
+
+
+                <a href="{% if request.args.get('next') %}{{ url_for('auth.register', next=request.args.get('next')) }}{% else %}{{ url_for('auth.register') }}{% endif %}"
+
+                    class="btn btn-outline-primary w-100">
+
+                    Создать аккаунт
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+</div>
+
+{% endblock %}
+

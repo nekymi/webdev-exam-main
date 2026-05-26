@@ -1,0 +1,440 @@
+﻿{% extends "base.html" %}
+
+
+
+{% block title %}Берегиня Алтая — традиции народной медицины{% endblock %}
+
+
+
+{% block content %}
+
+
+
+{# ── HERO ── #}
+
+<section class="hero-theme">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6 hero-content">
+
+                <p class="hero-eyebrow">Алтайские продукты для здоровья</p>
+
+                <h1>«Берегиня Алтая» — натуральная продукция с Алтая</h1>
+
+                <p class="hero-lead">
+
+                    Фиточаи и сборы, бальзамы и сиропы, мёд и масла холодного отжима, БАДы и косметика — от производителей Алтая.
+
+                    Отбираем только проверенное сырьё и заботимся о качестве.
+
+                </p>
+
+                <div class="hero-cta-wrap">
+
+                    <a href="#catalog" class="btn-hero-primary">Смотреть каталог</a>
+
+                    <a href="{{ url_for('main.about') }}" class="btn-hero-outline">О компании</a>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="col-lg-6 mt-4 mt-lg-0 hero-img-col">
+
+                <img src="{{ url_for('static', filename='img/hero-home.png') }}"
+
+                    class="hero-img" alt="Натуральная продукция «Берегиня Алтая»" width="1200" height="800" loading="eager">
+
+
+                <div class="hero-floating-badge">
+
+                    <span class="hfb-icon">🌿</span>
+
+                    <div>
+
+                        <strong>Народная медицина</strong>
+
+                        <span class="hfb-label">По традициям Алтая</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+{# ── FEATURE STRIP ── #}
+
+<section class="py-4 py-md-5 feature-strip" style="background: var(--color-bg);">
+
+    <div class="container">
+
+        <div class="row g-2 g-md-3 feature-strip__row">
+
+            <div class="col-6 col-md-3">
+
+                <div class="feature-card h-100">
+
+                    <div class="feature-card-media">
+
+                        <img src="{{ url_for('static', filename='img/features/natural.png') }}" width="640" height="360" alt="" loading="lazy">
+
+                    </div>
+
+                    <div class="feature-card-body">
+
+                        <h6>Экологично</h6>
+
+                        <p>Товары без вредных добавок — экологически чистое сырьё Алтая</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-6 col-md-3">
+
+                <div class="feature-card h-100">
+
+                    <div class="feature-card-media">
+
+                        <img src="{{ url_for('static', filename='img/features/delivery.png') }}" width="640" height="360" alt="" loading="lazy">
+
+                    </div>
+
+                    <div class="feature-card-body">
+
+                        <h6>Доставка</h6>
+
+                        <p>Быстрая доставка по Санкт-Петербургу и отправка по России</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-6 col-md-3">
+
+                <div class="feature-card h-100">
+
+                    <div class="feature-card-media">
+
+                        <img src="{{ url_for('static', filename='img/features/quality.png') }}" width="640" height="360" alt="" loading="lazy">
+
+                    </div>
+
+                    <div class="feature-card-body">
+
+                        <h6>Производство</h6>
+
+                        <p>Ручной сбор трав, контроль производства и отбраковка сырья</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-6 col-md-3">
+
+                <div class="feature-card h-100">
+
+                    <div class="feature-card-media">
+
+                        <img src="{{ url_for('static', filename='img/features/support.png') }}" width="640" height="360" alt="" loading="lazy">
+
+                    </div>
+
+                    <div class="feature-card-body">
+
+                        <h6>Партнёры</h6>
+
+                        <p>Официальное сотрудничество с алтайскими производителями</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+{# ── CATALOG ── #}
+
+<section class="py-5" id="catalog" style="background: var(--color-bg-warm);">
+
+    <div class="container">
+
+
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-4 gap-2">
+
+            <div>
+
+                <span class="section-label">Каталог</span>
+
+                <h2 class="section-heading mb-0">Наши продукты</h2>
+
+            </div>
+
+            <p class="text-muted small mb-0">Мёд, чаи, бальзамы, масла и другое для дома и подарков</p>
+
+        </div>
+
+
+
+        {# Search + filter toolbar #}
+
+        <form class="catalog-toolbar" method="get" id="catalog-search-form">
+
+            <input type="text" name="search" class="form-control flex-grow-1 catalog-toolbar__search"
+
+                placeholder="🔍  Поиск по товарам…" value="{{ search }}">
+
+            <select class="form-select catalog-toolbar__category" name="category">
+
+                <option value="">Все категории</option>
+
+                {% for category in categories %}
+
+                <option value="{{ category.id }}"
+
+                    {% if current_category == category.id %}selected{% endif %}>
+
+                    {{ category.name }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit" class="btn btn-primary">Найти</button>
+
+            {% if search or current_category %}
+
+            <a href="{{ url_for('main.index') }}" id="catalog-reset" class="btn btn-ghost" role="button">Сбросить</a>
+
+            {% endif %}
+
+        </form>
+
+
+
+        {# Category pills (quick filter) #}
+
+        {% if categories %}
+
+        <div class="category-pills" id="category-pills">
+
+            <a href="{{ url_for('main.index', search=search) }}"
+
+                class="category-pill {% if not current_category %}active{% endif %}"
+
+                data-category="">
+
+                Все
+
+            </a>
+
+            {% for category in categories %}
+
+            <a href="{{ url_for('main.index', category=category.id, search=search) }}"
+
+                class="category-pill {% if current_category == category.id %}active{% endif %}"
+
+                data-category="{{ category.id }}">
+
+                {{ category.name }}
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+
+        {# Product grid #}
+
+        <div class="products-grid" id="catalog-products">
+
+            {% for product in products %}
+
+            {% set img_src = product.main_image_path_or_url %}
+
+            <div class="product-card js-product-card" data-product-id="{{ product.id }}"
+
+                data-product-url="{{ url_for('main.product_detail', product_id=product.id) }}">
+
+                <div class="product-img-wrap">
+
+                    <img src="{% if img_src %}{% if img_src.startswith('http') %}{{ img_src }}{% else %}{{ url_for('static', filename=img_src) }}{% endif %}{% else %}{{ url_for('static', filename='img/placeholder-product.svg') }}{% endif %}"
+
+                        class="card-img-top"
+
+                        alt="{{ product.name }}"
+
+                        loading="lazy">
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="product-card__align">
+                        <div class="product-card__category-line">
+                            {% if product.category %}
+                            <span class="product-category">{{ product.category.name }}</span>
+                            {% endif %}
+                        </div>
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <div class="card-desc-wrap">
+                            {% if product.text_for_catalog %}
+                            <p class="card-desc">{{ product.text_for_catalog }}</p>
+                            {% else %}
+                            <p class="card-desc card-desc--empty" aria-hidden="true">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card-footer-row">
+
+                        <span class="price">{{ product.price }} ₽</span>
+
+                        <span class="stock-badge">{{ product.stock_qty }} шт.</span>
+
+                    </div>
+
+
+
+                    <div class="card-actions">
+
+                        <a href="{{ url_for('main.product_detail', product_id=product.id) }}"
+
+                            class="btn btn-outline-primary">
+
+                            Подробнее
+
+                        </a>
+
+                        <form method="post"
+
+                            action="{{ url_for('cart.add', product_id=product.id) }}"
+
+                            class="js-add-to-cart-form"
+
+                            data-product-id="{{ product.id }}"
+
+                            style="flex:1;">
+
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                            <input type="hidden" name="quantity" value="1">
+
+                            <button type="submit" class="btn btn-primary w-100">
+
+                                <i class="bi bi-bag-plus"></i> В корзину
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div style="grid-column: 1/-1;">
+
+                <div class="catalog-empty-state rounded-theme px-4 py-5 text-center">
+                    <i class="bi bi-inbox d-block mb-3 text-primary" style="font-size: 2rem; opacity: 0.85;" aria-hidden="true"></i>
+                    <p class="fw-semibold mb-2" style="font-family: var(--font-heading);">Ничего не нашлось</p>
+                    <p class="text-muted small mb-4 mb-md-0" style="max-width: 22rem; margin-left: auto; margin-right: auto;">
+                        Попробуйте другой запрос или сбросьте фильтры — полный каталог откроется без ограничений.
+                    </p>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary mt-md-2">Показать весь каталог</a>
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+
+        {# Pagination #}
+
+        <div id="catalog-pagination-wrap">
+
+        {% if total_pages > 1 %}
+
+        <nav aria-label="Страницы каталога" class="mt-5">
+
+            <ul class="pagination justify-content-center flex-wrap gap-1">
+
+                {% for p in range(1, total_pages + 1) %}
+
+                <li class="page-item {% if p == page %}active{% endif %}">
+
+                    <a class="page-link js-catalog-page"
+
+                        href="{{ url_for('main.index', page=p, category=current_category, search=search) }}"
+
+                        data-page="{{ p }}">{{ p }}</a>
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </nav>
+
+        {% endif %}
+
+        </div>
+
+
+
+    </div>
+
+</section>
+
+
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/catalog.js') }}"></script>
+
+{% endblock %}
+

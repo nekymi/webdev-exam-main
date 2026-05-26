@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}О компании — Берегиня Алтая{% endblock %}
+
+{% block content %}
+
+<div class="page-hero">
+    <div class="container">
+        <p class="page-hero-eyebrow">Берегиня Алтая</p>
+        <h1>О компании</h1>
+        <p>Натуральная продукция Алтая для здоровья и дома.</p>
+    </div>
+</div>
+
+<div class="container page-content-section layout-narrow">
+
+    <figure class="mb-4 mb-lg-5 rounded-theme overflow-hidden shadow-soft">
+        <img src="{{ url_for('static', filename='img/content/about-company.jpg') }}"
+            class="w-100"
+            alt="Продукция и атмосфера «Берегиня Алтая»"
+            style="aspect-ratio: 3/2; object-fit: cover;"
+            loading="lazy"
+            width="1242"
+            height="828">
+    </figure>
+
+    <div class="content-prose text-muted" style="font-size: var(--text-base); line-height: 1.8;">
+
+        <p class="text-dark fw-semibold mb-3">
+            Наша компания — официальный дистрибьютор ООО «Алтай-Старовер» по Санкт-Петербургу и Ленинградской области.
+        </p>
+
+        <p>
+            Наши магазины расположены в центре города: Спасский переулок, 6/8 (м. Садовая) и Большая Пушкарская, 1/8 (м. Петроградская / м. Чкаловская).
+        </p>
+
+        <p>
+            Алтайский край давно славится красотой и чистотой своей природы — его называют «жемчужина Сибири». Растения предгорий, лесов и полей Алтая традиционно используют в народной практике; бальзамы, фиточаи, травяные сборы и косметика на их основе помогают поддерживать самочувствие.
+        </p>
+
+        <p>
+            Мы гарантируем, что ассортимент интернет-магазина «Берегиня Алтая» изготавливается из качественного экологически чистого сырья, произрастающего на территории Горного Алтая и Алтайского края. Поставщики — известные на Алтае производители натуральной косметики, масел, бальзамов и товаров для здорового образа жизни.
+        </p>
+
+        <p>
+            В работе мы опираемся на старинные рецепты алтайских народов и традиции лечебной практики, проверенные временем.
+        </p>
+
+        <p class="mb-0 fw-semibold text-dark" style="font-family: var(--font-heading);">
+            Желаем вам душевного и телесного здоровья!
+        </p>
+
+    </div>
+
+    <div class="mt-5 pt-4 border-top">
+        <a href="{{ url_for('main.index') }}#catalog" class="btn btn-primary">Перейти в каталог</a>
+        <a href="{{ url_for('main.contacts') }}" class="btn btn-outline-primary ms-2 ms-md-3 mt-2 mt-md-0">Контакты</a>
+    </div>
+
+</div>
+
+{% endblock %}
